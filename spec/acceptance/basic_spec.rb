@@ -2,7 +2,8 @@ require 'spec_helper_acceptance'
 
 describe 'basic installation' do
   let(:pp) {
-    "class { 'postgresql::globals':
+    <<-PUPPET
+    class { 'postgresql::globals':
       version              => '10',
       client_package_name  => 'rh-postgresql10-postgresql-syspaths',
       server_package_name  => 'rh-postgresql10-postgresql-server-syspaths',
@@ -11,8 +12,9 @@ describe 'basic installation' do
       datadir              => '/var/lib/pgsql/data',
       confdir              => '/var/lib/pgsql/data',
       bindir               => '/usr/bin',
-    }"
-    'include pulpcore'
+    }
+    include pulpcore
+    PUPPET
   }
 
   it_behaves_like 'a idempotent resource'
