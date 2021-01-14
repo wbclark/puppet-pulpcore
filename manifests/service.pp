@@ -3,6 +3,11 @@
 class pulpcore::service {
   include apache
 
+  $services_ensure_stopped = $pulpcore::service_ensure ? {
+    true  => undef,
+    false => false,
+  }
+
   systemd::unit_file { 'pulpcore-api.socket':
     content => template('pulpcore/pulpcore-api.socket.erb'),
     active  => $pulpcore::service_ensure,
@@ -11,7 +16,7 @@ class pulpcore::service {
 
   systemd::unit_file { 'pulpcore-api.service':
     content => template('pulpcore/pulpcore-api.service.erb'),
-    active  => $pulpcore::service_ensure,
+    active  => $services_ensure_stopped,
     enable  => $pulpcore::service_enable,
   }
 
@@ -23,7 +28,7 @@ class pulpcore::service {
 
   systemd::unit_file { 'pulpcore-content.service':
     content => template('pulpcore/pulpcore-content.service.erb'),
-    active  => $pulpcore::service_ensure,
+    active  => $services_ensure_stopped,
     enable  => $pulpcore::service_enable,
   }
 

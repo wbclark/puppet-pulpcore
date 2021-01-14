@@ -428,6 +428,21 @@ CONTENT
           is_expected.to contain_service("pulpcore-worker@1.service").with_ensure(false)
         end
       end
+
+      context 'relies on sockets to start services' do
+        let :params do
+          {
+            service_ensure: true
+          }
+        end
+
+        it do
+          is_expected.to contain_systemd__unit_file("pulpcore-api.socket").with_active(true)
+          is_expected.to contain_systemd__unit_file("pulpcore-api.service").without_active(nil)
+          is_expected.to contain_systemd__unit_file("pulpcore-content.socket").with_active(true)
+          is_expected.to contain_systemd__unit_file("pulpcore-content.service").without_active(nil)
+        end
+      end
     end
   end
 end
